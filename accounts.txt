@@ -4,3 +4,4 @@ linda.miller8721065i@gmail.com | Test@12345 | SUCCESS
 james.brown3368740t@gmail.com | Test@12345 | SUCCESS
 linda.johnson290889a@gmail.com | Test@12345 | SUCCESS
 jennifer.jones251394hi@gmail.com | Test@12345 | SUCCESS
+james.garcia592235y2@gmail.com | Test@12345 | SUCCESS
