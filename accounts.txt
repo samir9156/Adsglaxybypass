@@ -51,3 +51,4 @@ james.johnson510296nb@gmail.com | Test@12345 | SUCCESS
 patricia.johnson805880ac@gmail.com | Test@12345 | SUCCESS
 jennifer.johnson6629682q@gmail.com | Test@12345 | SUCCESS
 patricia.garcia6187113x@gmail.com | Test@12345 | SUCCESS
+michael.smith316813c3@gmail.com | Test@12345 | SUCCESS
