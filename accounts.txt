@@ -168,3 +168,4 @@ linda.davis753575af@gmail.com | Test@12345 | SUCCESS
 linda.jones997059tr@gmail.com | Test@12345 | SUCCESS
 james.smith50280u8@gmail.com | Test@12345 | SUCCESS
 james.garcia319951i3@gmail.com | Test@12345 | SUCCESS
+john.garcia48625ls@gmail.com | Test@12345 | SUCCESS
