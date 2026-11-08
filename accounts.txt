@@ -112,3 +112,4 @@ mary.williams37223av@gmail.com | Test@12345 | SUCCESS
 john.brown2503768t@gmail.com | Test@12345 | SUCCESS
 michael.johnson19504971@gmail.com | Test@12345 | SUCCESS
 john.miller155184fl@gmail.com | Test@12345 | SUCCESS
+patricia.smith114717f4@gmail.com | Test@12345 | SUCCESS
