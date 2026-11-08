@@ -126,3 +126,4 @@ linda.davis7843d0@gmail.com | Test@12345 | SUCCESS
 michael.miller3210074c@gmail.com | Test@12345 | SUCCESS
 patricia.smith699395m6@gmail.com | Test@12345 | SUCCESS
 john.brown62242221@gmail.com | Test@12345 | SUCCESS
+patricia.smith356034pg@gmail.com | Test@12345 | SUCCESS
