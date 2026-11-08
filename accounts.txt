@@ -118,3 +118,4 @@ jennifer.williams23829o@gmail.com | Test@12345 | SUCCESS
 linda.jones996079ek@gmail.com | Test@12345 | SUCCESS
 patricia.brown387473oz@gmail.com | Test@12345 | SUCCESS
 james.davis849405yy@gmail.com | Test@12345 | SUCCESS
+patricia.smith4560785w@gmail.com | Test@12345 | SUCCESS
