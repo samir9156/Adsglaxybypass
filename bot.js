@@ -1,15 +1,14 @@
 /**
  * @file AdsGalaxy Railway Bot
- * @description Automated account creation with 3-min delay.
+ * @description Automated account creation with 3-min delay and unique email generation.
  */
 
 const puppeteer = require('puppeteer');
 const fs = require('fs');
 
 // ==========================================
-// CONFIGURATION FROM RAILWAY VARIABLES
+// CONFIGURATION
 // ==========================================
-// Railway me TARGET_URLS variable set karein (comma separated)
 const TARGET_URLS = process.env.TARGET_URLS 
     ? process.env.TARGET_URLS.split(',').map(url => url.trim()).filter(url => url !== '') 
     : ['https://app.adsgalaxy.online/api/clicks/62/2237426'];
@@ -22,43 +21,29 @@ if (!fs.existsSync('./screenshots')) fs.mkdirSync('./screenshots');
 const USER_AGENTS = [
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
     'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Safari/605.1.15',
-    'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36',
     'Mozilla/5.0 (Linux; Android 13; SM-S901B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Mobile Safari/537.36'
 ];
 
-const FIRST_NAMES = ['james', 'mary', 'john', 'patricia', 'robert', 'jennifer', 'michael', 'linda', 'william', 'elizabeth', 'david', 'barbara', 'richard', 'susan', 'joseph', 'jessica', 'thomas', 'sarah', 'charles', 'karen', 'daniel', 'nancy', 'matthew', 'lisa', 'anthony', 'betty', 'mark', 'margaret', 'donald', 'sandra'];
-const LAST_NAMES = ['smith', 'johnson', 'williams', 'brown', 'jones', 'garcia', 'miller', 'davis', 'rodriguez', 'martinez', 'hernandez', 'lopez', 'gonzalez', 'wilson', 'anderson', 'thomas', 'taylor', 'moore', 'jackson', 'martin', 'lee', 'perez', 'thompson', 'white', 'harris', 'sanchez', 'clark', 'ramirez', 'lewis', 'robinson'];
+const FIRST_NAMES = ['james', 'mary', 'john', 'patricia', 'robert', 'jennifer', 'michael', 'linda', 'william', 'elizabeth', 'david', 'barbara', 'richard', 'susan'];
+const LAST_NAMES = ['smith', 'johnson', 'williams', 'brown', 'jones', 'garcia', 'miller', 'davis', 'rodriguez', 'martinez', 'hernandez', 'lopez'];
 
-/**
- * @param {number} ms - Wait time in milliseconds.
- * @returns {Promise<void>}
- */
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 /**
- * @returns {string} Random Email Address.
+ * @returns {string} A highly unique email address
  */
 function generateRealisticEmail() {
     const f = FIRST_NAMES[Math.floor(Math.random() * FIRST_NAMES.length)];
     const l = LAST_NAMES[Math.floor(Math.random() * LAST_NAMES.length)];
-    const num = Math.floor(Math.random() * 9999);
-    return `${f}.${l}${num}@gmail.com`;
+    const num = Math.floor(Math.random() * 999999);
+    const letters = Math.random().toString(36).substring(2, 4); 
+    return `${f}.${l}${num}${letters}@gmail.com`;
 }
 
-/**
- * @returns {string} Random User Agent.
- */
 function getRandomUA() {
     return USER_AGENTS[Math.floor(Math.random() * USER_AGENTS.length)];
 }
 
-/**
- * @param {import('puppeteer').Page} page 
- * @param {string} url 
- * @param {string} email 
- * @param {string} password 
- * @returns {Promise<boolean>}
- */
 async function processUrl(page, url, email, password) {
     console.log(`\n[🌐] Processing: ${url}`);
     try {
@@ -70,26 +55,38 @@ async function processUrl(page, url, email, password) {
     await delay(2000);
 
     const hasEmailInput = await page.evaluate(() => !!document.querySelector('input[name="email"]'));
+    
     if (hasEmailInput) {
-        console.log(`[+] Register form detected. Filling...`);
+        console.log(`[+] Register form detected. Filling with: ${email}`);
         await page.type('input[name="email"]', String(email), { delay: 50 });
+        
         await page.evaluate((pw) => {
             document.querySelectorAll('input[type="password"]').forEach(input => {
                 input.value = String(pw);
                 input.dispatchEvent(new Event('input', { bubbles: true }));
             });
         }, password);
+        
         await page.evaluate(() => {
             const btn = document.querySelector('#sub-email');
             if(btn) btn.click();
         });
-        console.log(`[+] Clicked Create Account. Waiting...`);
+        
+        console.log(`[+] Clicked Create Account. Checking status...`);
         await delay(5000);
+
+        const isStillRegisterForm = await page.evaluate(() => !!document.querySelector('input[name="email"]'));
+        const errorText = await page.evaluate(() => document.body.innerText);
+        
+        if (isStillRegisterForm && (errorText.includes('already') || errorText.includes('exists') || errorText.includes('error'))) {
+            console.log(`[⚠️] Email already registered or Error occurred!`);
+            return false; 
+        }
     }
 
     const hasLoginInput = await page.evaluate(() => !!document.querySelector('input[name="identifier"]'));
     if (hasLoginInput) {
-        console.log(`[+] Login form detected. Filling...`);
+        console.log(`[+] Login form detected. Signing in...`);
         await page.type('input[name="identifier"]', String(email), { delay: 50 });
         await page.evaluate((pw) => {
             document.querySelectorAll('input[type="password"]').forEach(input => {
@@ -101,7 +98,6 @@ async function processUrl(page, url, email, password) {
             const btn = document.querySelector('button.btn-primary');
             if(btn) btn.click();
         });
-        console.log(`[+] Clicked Sign In. Waiting for Dashboard...`);
         await delay(5000);
     }
 
@@ -135,7 +131,6 @@ async function processUrl(page, url, email, password) {
         return true;
     } else {
         console.log(`[❌] UNLOCK button not found.`);
-        await page.screenshot({ path: `./screenshots/fail_${Date.now()}.png` });
         return false;
     }
 }
@@ -151,22 +146,40 @@ async function runBot() {
         const page = await context.newPage();
         await page.setUserAgent(getRandomUA());
 
-        const email = generateRealisticEmail();
-        console.log(`\n[📧] Email: ${email}`);
+        let success = false;
+        let attempts = 0;
+        
+        while (!success && attempts < 3) {
+            attempts++;
+            const email = generateRealisticEmail();
+            console.log(`\n[📧] Attempt ${attempts} | Email: ${email}`);
 
-        try {
-            for (let i = 0; i < TARGET_URLS.length; i++) {
-                await processUrl(page, TARGET_URLS[i], email, PASSWORD);
+            try {
+                let urlsProcessed = 0;
+                for (let i = 0; i < TARGET_URLS.length; i++) {
+                    const urlSuccess = await processUrl(page, TARGET_URLS[i], email, PASSWORD);
+                    if (!urlSuccess && i === 0) {
+                        throw new Error("First link processing failed. Maybe email exists.");
+                    }
+                    if (urlSuccess) urlsProcessed++;
+                }
+                
+                if (urlsProcessed > 0) {
+                    fs.appendFileSync('accounts.txt', `${email} | ${PASSWORD} | SUCCESS\n`);
+                    success = true; 
+                }
+            } catch (error) {
+                console.error(`[!] Attempt failed: ${error.message}`);
+                if (attempts === 3) {
+                    console.error(`[❌] Failed 3 times. Moving to next iteration.`);
+                }
             }
-            fs.appendFileSync('accounts.txt', `${email} | ${PASSWORD} | SUCCESS\n`);
-        } catch (error) {
-            console.error(`[!] Error: ${error.message}`);
-        } finally {
-            await context.close();
-            await browser.close();
-            console.log(`[+] Browser closed. Waiting ${DELAY_MINUTES} minutes...`);
-            await delay(DELAY_MINUTES * 60 * 1000);
         }
+
+        await context.close();
+        await browser.close();
+        console.log(`\n[+] Data cleared. Waiting ${DELAY_MINUTES} minutes...`);
+        await delay(DELAY_MINUTES * 60 * 1000);
     }
 }
 
