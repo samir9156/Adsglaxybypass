@@ -47,3 +47,4 @@ john.jones183531eg@gmail.com | Test@12345 | SUCCESS
 jennifer.miller154515y8@gmail.com | Test@12345 | SUCCESS
 linda.garcia661135o1@gmail.com | Test@12345 | SUCCESS
 mary.brown331613yt@gmail.com | Test@12345 | SUCCESS
+james.johnson510296nb@gmail.com | Test@12345 | SUCCESS
