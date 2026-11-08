@@ -182,3 +182,4 @@ patricia.miller178618sr@gmail.com | Test@12345 | SUCCESS
 patricia.williams2380727g@gmail.com | Test@12345 | SUCCESS
 mary.smith3557951m@gmail.com | Test@12345 | SUCCESS
 james.garcia754021kn@gmail.com | Test@12345 | SUCCESS
+michael.garcia379676dv@gmail.com | Test@12345 | SUCCESS
