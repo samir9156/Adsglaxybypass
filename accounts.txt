@@ -257,3 +257,4 @@ michael.johnson182603tc@gmail.com | Test@12345 | SUCCESS
 linda.garcia575331lq@gmail.com | Test@12345 | SUCCESS
 mary.jones486708m5@gmail.com | Test@12345 | SUCCESS
 mary.brown758817su@gmail.com | Test@12345 | SUCCESS
+patricia.smith348886rl@gmail.com | Test@12345 | SUCCESS
