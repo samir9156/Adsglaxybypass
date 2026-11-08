@@ -166,3 +166,4 @@ linda.miller8822990@gmail.com | Test@12345 | SUCCESS
 mary.davis865178nq@gmail.com | Test@12345 | SUCCESS
 linda.davis753575af@gmail.com | Test@12345 | SUCCESS
 linda.jones997059tr@gmail.com | Test@12345 | SUCCESS
+james.smith50280u8@gmail.com | Test@12345 | SUCCESS
