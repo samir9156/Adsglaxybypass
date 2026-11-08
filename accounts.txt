@@ -67,3 +67,4 @@ jennifer.miller5147057k@gmail.com | Test@12345 | SUCCESS
 linda.garcia5843649b@gmail.com | Test@12345 | SUCCESS
 linda.williams42640101@gmail.com | Test@12345 | SUCCESS
 mary.williams1448094z@gmail.com | Test@12345 | SUCCESS
+james.jones344972li@gmail.com | Test@12345 | SUCCESS
