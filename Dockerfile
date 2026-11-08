@@ -1,6 +1,6 @@
 FROM node:18-slim
 
-# Chrome dependencies install karein (libnss3 added)
+# Chrome aur proxy dependencies
 RUN apt-get update && apt-get install -y \
     wget gnupg ca-certificates fonts-liberation libasound2 libatk-bridge2.0-0 \
     libatk1.0-0 libc6 libcairo2 libcups2 libdbus-1-3 libexpat1 libfontconfig1 \
