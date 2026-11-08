@@ -153,3 +153,4 @@ mary.garcia240796ya@gmail.com | Test@12345 | SUCCESS
 jennifer.smith1799947t@gmail.com | Test@12345 | SUCCESS
 robert.williams927655rw@gmail.com | Test@12345 | SUCCESS
 jennifer.davis24529388@gmail.com | Test@12345 | SUCCESS
+james.smith496158w7@gmail.com | Test@12345 | SUCCESS
