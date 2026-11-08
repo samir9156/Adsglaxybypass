@@ -374,3 +374,4 @@ john.miller229483bq@gmail.com | Test@12345 | SUCCESS
 john.brown360434n4@gmail.com | Test@12345 | SUCCESS
 james.davis326753fu@gmail.com | Test@12345 | SUCCESS
 patricia.davis793630jz@gmail.com | Test@12345 | SUCCESS
+james.garcia537664jf@gmail.com | Test@12345 | SUCCESS
