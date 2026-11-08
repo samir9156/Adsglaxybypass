@@ -17,3 +17,4 @@ james.williams4184665a@gmail.com | Test@12345 | SUCCESS
 robert.jones48482ri@gmail.com | Test@12345 | SUCCESS
 john.smith1417197y@gmail.com | Test@12345 | SUCCESS
 patricia.johnson9227994s@gmail.com | Test@12345 | SUCCESS
+james.garcia450881v7@gmail.com | Test@12345 | SUCCESS
