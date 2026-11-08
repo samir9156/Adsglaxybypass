@@ -1,13 +1,13 @@
 /**
- * @file AdsGalaxy Railway Bot - Final Version
- * @description Auto account creation, GitHub DB sync, and Railway Auto-redeploy.
+ * @file AdsGalaxy Railway Bot - Final Fixed Version
+ * @description Auto account creation, GitHub DB sync, IP check, and Railway Auto-redeploy.
  */
 
 const puppeteer = require('puppeteer');
 const fs = require('fs');
 
 // ==========================================
-// ENVIRONMENT VARIABLES (Railway se aayenge)
+// ENVIRONMENT VARIABLES
 // ==========================================
 const TARGET_URLS = process.env.TARGET_URLS 
     ? process.env.TARGET_URLS.split(',').map(url => url.trim()).filter(url => url !== '') 
@@ -29,11 +29,16 @@ const RAILWAY_SERVICE_ID = process.env.RAILWAY_SERVICE_ID;
 // ==========================================
 const UA_LIST = [
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Safari/605.1.15'
+    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Safari/605.1.15',
+    'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36'
 ];
 const FIRST_NAMES = ['james', 'mary', 'john', 'patricia', 'robert', 'jennifer', 'michael', 'linda'];
 const LAST_NAMES = ['smith', 'johnson', 'williams', 'brown', 'jones', 'garcia', 'miller', 'davis'];
 
+/**
+ * @param {number} ms - Wait time in milliseconds
+ * @returns {Promise<void>}
+ */
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 /**
@@ -47,9 +52,26 @@ function generateEmail() {
     return `${f}.${l}${num}${letters}@gmail.com`;
 }
 
+/**
+ * Fetches the current outbound IP of the Railway container.
+ * @returns {Promise<string>} IP Address
+ */
+async function getCurrentIP() {
+    try {
+        const res = await fetch('https://api.ipify.org?format=json');
+        const data = await res.json();
+        return data.ip;
+    } catch (e) {
+        return 'Unknown IP';
+    }
+}
+
 // ==========================================
-// 1. GITHUB DATABASE FUNCTION (Append Mode)
+// 1. GITHUB DATABASE FUNCTION
 // ==========================================
+/**
+ * @param {string} accountData - Account string to append
+ */
 async function updateGitHubDatabase(accountData) {
     if (!GITHUB_TOKEN) {
         console.log(`[!] GitHub Token missing. Saving locally.`);
@@ -65,37 +87,46 @@ async function updateGitHubDatabase(accountData) {
     };
 
     try {
-        console.log(`[⏳] Syncing with GitHub...`);
+        console.log(`[⏳] Syncing with GitHub Database...`);
         let sha = null;
         let existingContent = '';
 
-        // Fetch existing file
+        // Check if file exists
         const getRes = await fetch(url, { headers });
         if (getRes.status === 200) {
             const data = await getRes.json();
             sha = data.sha;
             existingContent = Buffer.from(data.content, 'base64').toString('utf-8');
+        } else if (getRes.status === 404) {
+            console.log(`[+] accounts.txt not found. Creating new file...`);
         }
 
-        // Add new data without deleting old
+        // Append new data
         const updatedContent = existingContent ? `${existingContent}${accountData}\n` : `${accountData}\n`;
         const base64Content = Buffer.from(updatedContent).toString('base64');
+
+        // Prepare payload
+        const payload = {
+            message: `Added account: ${accountData.split('|')[0].trim()}`,
+            content: base64Content,
+            branch: "main"
+        };
+        
+        // SHA is ONLY required if the file already exists
+        if (sha) payload.sha = sha;
 
         // Push to GitHub
         const putRes = await fetch(url, {
             method: 'PUT',
             headers,
-            body: JSON.stringify({
-                message: `Added account: ${accountData.split('|')[0].trim()}`,
-                content: base64Content,
-                sha: sha || undefined
-            })
+            body: JSON.stringify(payload)
         });
 
         if (putRes.status === 200 || putRes.status === 201) {
             console.log(`[✅] Database Updated on GitHub!`);
         } else {
-            console.log(`[!] GitHub Push Failed: ${putRes.statusText}`);
+            const errData = await putRes.json();
+            console.log(`[!] GitHub Push Failed: ${errData.message}`);
         }
     } catch (error) {
         console.log(`[!] GitHub Error: ${error.message}`);
@@ -107,8 +138,8 @@ async function updateGitHubDatabase(accountData) {
 // ==========================================
 async function triggerRailwayRedeploy() {
     if (!RAILWAY_TOKEN || !RAILWAY_ENV_ID || !RAILWAY_SERVICE_ID) {
-        console.log(`[!] Railway API keys missing. Force restarting locally...`);
-        process.exit(0); // Forces Railway to restart the container
+        console.log(`[!] Railway API keys missing. Restarting locally...`);
+        process.exit(0); 
         return;
     }
 
@@ -137,7 +168,7 @@ async function triggerRailwayRedeploy() {
         } else {
             console.log(`[✅] Redeploy triggered! Container restarting...`);
             await delay(5000); 
-            process.exit(0); // Ensure script exits
+            process.exit(0); 
         }
     } catch (e) {
         console.log(`[!] Redeploy failed: ${e.message}`);
@@ -217,6 +248,15 @@ async function processUrl(page, url, email, password) {
 async function runBot() {
     console.log(`[+] Railway Bot Started!`);
     
+    // Fetch and display IP & Email first
+    const currentIP = await getCurrentIP();
+    const email = generateEmail();
+    const selectedUA = UA_LIST[Math.floor(Math.random() * UA_LIST.length)];
+
+    console.log(`[📧] Email Used: ${email}`);
+    console.log(`[🌐] Current IP: ${currentIP}`);
+    console.log(`[🕵️] User-Agent: ${selectedUA.substring(0, 40)}...`);
+
     const browser = await puppeteer.launch({
         headless: 'new',
         args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage']
@@ -224,10 +264,7 @@ async function runBot() {
     
     const context = await browser.createBrowserContext();
     const page = await context.newPage();
-    await page.setUserAgent(UA_LIST[Math.floor(Math.random() * UA_LIST.length)]);
-
-    const email = generateEmail();
-    console.log(`\n[📧] Email: ${email}`);
+    await page.setUserAgent(selectedUA);
 
     try {
         let success = false;
@@ -248,7 +285,7 @@ async function runBot() {
         await context.close();
         await browser.close();
         
-        // 3 minute wait ki jagah Auto-Redeploy trigger
+        // Trigger Auto-Redeploy
         await triggerRailwayRedeploy();
     }
 }
