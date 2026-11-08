@@ -368,3 +368,4 @@ robert.williams890700kc@gmail.com | Test@12345 | SUCCESS
 michael.davis888062wu@gmail.com | Test@12345 | SUCCESS
 mary.johnson4411894o@gmail.com | Test@12345 | SUCCESS
 mary.jones848676ta@gmail.com | Test@12345 | SUCCESS
+james.smith458508kc@gmail.com | Test@12345 | SUCCESS
