@@ -97,3 +97,4 @@ patricia.jones725591ev@gmail.com | Test@12345 | SUCCESS
 john.brown75116lz@gmail.com | Test@12345 | SUCCESS
 michael.jones696306kt@gmail.com | Test@12345 | SUCCESS
 james.smith788699qj@gmail.com | Test@12345 | SUCCESS
+michael.garcia609126ib@gmail.com | Test@12345 | SUCCESS
