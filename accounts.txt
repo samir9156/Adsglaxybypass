@@ -93,3 +93,4 @@ jennifer.davis819239f@gmail.com | Test@12345 | SUCCESS
 john.garcia637266ex@gmail.com | Test@12345 | SUCCESS
 michael.smith39945rm@gmail.com | Test@12345 | SUCCESS
 patricia.jones603467ok@gmail.com | Test@12345 | SUCCESS
+patricia.jones725591ev@gmail.com | Test@12345 | SUCCESS
