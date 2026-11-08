@@ -175,3 +175,4 @@ jennifer.smith441434hp@gmail.com | Test@12345 | SUCCESS
 michael.miller698437b8@gmail.com | Test@12345 | SUCCESS
 mary.davis7415161l@gmail.com | Test@12345 | SUCCESS
 jennifer.johnson194906po@gmail.com | Test@12345 | SUCCESS
+james.garcia654893wi@gmail.com | Test@12345 | SUCCESS
