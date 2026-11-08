@@ -8,3 +8,4 @@ james.garcia592235y2@gmail.com | Test@12345 | SUCCESS
 robert.davis32902868@gmail.com | Test@12345 | SUCCESS
 robert.williams9469602v@gmail.com | Test@12345 | SUCCESS
 robert.miller265073m5@gmail.com | Test@12345 | SUCCESS
+michael.miller336488y6@gmail.com | Test@12345 | SUCCESS
