@@ -799,3 +799,4 @@ john.miller132678bf@gmail.com | Test@12345 | SUCCESS
 mary.williams882129zb@gmail.com | Test@12345 | SUCCESS
 james.miller416994x3@gmail.com | Test@12345 | SUCCESS
 robert.garcia2935800r@gmail.com | Test@12345 | SUCCESS
+james.garcia95480ux@gmail.com | Test@12345 | SUCCESS
