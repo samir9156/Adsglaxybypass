@@ -984,3 +984,4 @@ john.johnson79569gs@gmail.com | Test@12345 | SUCCESS
 jennifer.davis3722213p@gmail.com | Test@12345 | SUCCESS
 robert.jones3176331a@gmail.com | Test@12345 | SUCCESS
 patricia.garcia887509j0@gmail.com | Test@12345 | SUCCESS
+patricia.smith358524gs@gmail.com | Test@12345 | SUCCESS
