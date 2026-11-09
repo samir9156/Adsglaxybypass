@@ -994,3 +994,4 @@ jennifer.johnson96735zo@gmail.com | Test@12345 | SUCCESS
 linda.davis9796528q@gmail.com | Test@12345 | SUCCESS
 michael.williams958320fb@gmail.com | Test@12345 | SUCCESS
 patricia.williams51528640@gmail.com | Test@12345 | SUCCESS
+michael.garcia771287da@gmail.com | Test@12345 | SUCCESS
