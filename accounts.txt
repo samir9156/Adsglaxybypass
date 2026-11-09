@@ -726,3 +726,4 @@ jennifer.johnson96831dq@gmail.com | Test@12345 | SUCCESS
 michael.brown7990069u@gmail.com | Test@12345 | SUCCESS
 patricia.miller451219az@gmail.com | Test@12345 | SUCCESS
 james.garcia222228e7@gmail.com | Test@12345 | SUCCESS
+mary.garcia6100348u@gmail.com | Test@12345 | SUCCESS
