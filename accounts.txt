@@ -643,3 +643,4 @@ patricia.brown579876y6@gmail.com | Test@12345 | SUCCESS
 james.williams902012qd@gmail.com | Test@12345 | SUCCESS
 mary.jones503816gb@gmail.com | Test@12345 | SUCCESS
 michael.johnson259272mr@gmail.com | Test@12345 | SUCCESS
+michael.garcia410274y6@gmail.com | Test@12345 | SUCCESS
