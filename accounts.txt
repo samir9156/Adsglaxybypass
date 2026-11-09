@@ -774,3 +774,4 @@ linda.brown175070bu@gmail.com | Test@12345 | SUCCESS
 patricia.johnson582564q1@gmail.com | Test@12345 | SUCCESS
 michael.davis397187hq@gmail.com | Test@12345 | SUCCESS
 michael.brown784504xi@gmail.com | Test@12345 | SUCCESS
+patricia.smith5368535k@gmail.com | Test@12345 | SUCCESS
