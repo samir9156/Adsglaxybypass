@@ -602,3 +602,4 @@ james.williams242713zz@gmail.com | Test@12345 | SUCCESS
 mary.williams308508ku@gmail.com | Test@12345 | SUCCESS
 linda.brown960027qa@gmail.com | Test@12345 | SUCCESS
 jennifer.williams615316r1@gmail.com | Test@12345 | SUCCESS
+michael.smith54360ro@gmail.com | Test@12345 | SUCCESS
