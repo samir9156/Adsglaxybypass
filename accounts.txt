@@ -1031,3 +1031,4 @@ robert.johnson940365m3@gmail.com | Test@12345 | SUCCESS
 james.johnson150482rj@gmail.com | Test@12345 | SUCCESS
 mary.smith316967mj@gmail.com | Test@12345 | SUCCESS
 robert.davis764099u1@gmail.com | Test@12345 | SUCCESS
+michael.smith26991up@gmail.com | Test@12345 | SUCCESS
