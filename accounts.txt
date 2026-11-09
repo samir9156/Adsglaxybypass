@@ -968,3 +968,4 @@ john.williams425717yi@gmail.com | Test@12345 | SUCCESS
 mary.smith747953qa@gmail.com | Test@12345 | SUCCESS
 jennifer.williams397262u5@gmail.com | Test@12345 | SUCCESS
 james.brown57509180@gmail.com | Test@12345 | SUCCESS
+michael.garcia293788cb@gmail.com | Test@12345 | SUCCESS
