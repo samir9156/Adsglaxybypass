@@ -619,3 +619,4 @@ james.smith569187vj@gmail.com | Test@12345 | SUCCESS
 robert.miller776940gu@gmail.com | Test@12345 | SUCCESS
 john.brown268866wa@gmail.com | Test@12345 | SUCCESS
 michael.brown555168kr@gmail.com | Test@12345 | SUCCESS
+michael.miller5969124d@gmail.com | Test@12345 | SUCCESS
