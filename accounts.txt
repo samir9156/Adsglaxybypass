@@ -695,3 +695,4 @@ mary.jones9386801b@gmail.com | Test@12345 | SUCCESS
 jennifer.smith643710h7@gmail.com | Test@12345 | SUCCESS
 robert.jones930974xj@gmail.com | Test@12345 | SUCCESS
 john.smith31826lj@gmail.com | Test@12345 | SUCCESS
+michael.smith377481rh@gmail.com | Test@12345 | SUCCESS
