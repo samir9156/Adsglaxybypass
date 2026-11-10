@@ -1188,3 +1188,4 @@ linda.jones851036bu@gmail.com | Test@12345 | SUCCESS
 jennifer.garcia460462rz@gmail.com | Test@12345 | SUCCESS
 patricia.garcia717139wt@gmail.com | Test@12345 | SUCCESS
 john.williams795534p8@gmail.com | Test@12345 | SUCCESS
+michael.garcia233899k5@gmail.com | Test@12345 | SUCCESS
