@@ -1380,3 +1380,4 @@ linda.brown365683x6@gmail.com | Test@12345 | SUCCESS
 jennifer.miller14311218@gmail.com | Test@12345 | SUCCESS
 jennifer.jones8356294t@gmail.com | Test@12345 | SUCCESS
 john.davis693521mv@gmail.com | Test@12345 | SUCCESS
+michael.garcia9803860z@gmail.com | Test@12345 | SUCCESS
