@@ -1208,3 +1208,4 @@ james.jones94491050@gmail.com | Test@12345 | SUCCESS
 patricia.williams1214001w@gmail.com | Test@12345 | SUCCESS
 john.miller276350pf@gmail.com | Test@12345 | SUCCESS
 mary.williams641504bc@gmail.com | Test@12345 | SUCCESS
+patricia.smith7442868l@gmail.com | Test@12345 | SUCCESS
