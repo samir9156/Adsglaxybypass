@@ -1,16 +1,12 @@
-/**
- * @file AdsGalaxy Railway Bot - Final Bulletproof Version
- */
-
 const puppeteer = require('puppeteer');
 const fs = require('fs');
+const { execSync } = require('child_process');
 
 // ==========================================
-// ENVIRONMENT VARIABLES (Strict Parsing)
+// ENVIRONMENT VARIABLES
 // ==========================================
-// Ye line automatically extra spaces, newlines, aur quotes hata degi
-const GITHUB_TOKEN = (process.env.GITHUB_TOKEN || '').trim().replace(/['"]/g, '');
-const GITHUB_REPO = (process.env.GITHUB_REPO || 'samir9156/Adsglaxybypass').trim().replace(/['"]/g, '');
+const GITHUB_TOKEN = (process.env.GITHUB_TOKEN || '').trim();
+const GITHUB_REPO = (process.env.GITHUB_REPO || 'samir9156/Adsglaxybypass').trim();
 const GITHUB_FILE = 'accounts.txt';
 
 const TARGET_URLS = process.env.TARGET_URLS 
@@ -18,10 +14,14 @@ const TARGET_URLS = process.env.TARGET_URLS
     : ['https://app.adsgalaxy.online/api/clicks/62/2237426'];
 const PASSWORD = (process.env.BOT_PASSWORD || 'Test@12345').trim();
 
-// Railway API Variables
 const RAILWAY_TOKEN = (process.env.RAILWAY_TOKEN || '').trim();
 const RAILWAY_ENV_ID = (process.env.RAILWAY_ENV_ID || '').trim();
 const RAILWAY_SERVICE_ID = (process.env.RAILWAY_SERVICE_ID || '').trim();
+
+// Telegram Userbot Variables
+const TG_API_ID = (process.env.TG_API_ID || '').trim();
+const TG_API_HASH = (process.env.TG_API_HASH || '').trim();
+const TG_SESSION = (process.env.TG_SESSION || '').trim();
 
 const UA_LIST = [
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
@@ -40,217 +40,153 @@ function generateEmail() {
     return `${f}.${l}${num}${letters}@gmail.com`;
 }
 
-// ==========================================
-// GITHUB DATABASE FUNCTION
-// ==========================================
 async function updateGitHubDatabase(accountData) {
-    if (!GITHUB_TOKEN) {
-        console.log(`[!] GITHUB_TOKEN is missing.`);
-        return;
-    }
-
+    if (!GITHUB_TOKEN) return;
     const url = `https://api.github.com/repos/${GITHUB_REPO}/contents/${GITHUB_FILE}`;
-    console.log(`[🔍] Fetching URL: ${url}`);
-    
-    // 'token' prefix is safer for classic PATs
-    const headers = {
-        'Authorization': `token ${GITHUB_TOKEN}`, 
-        'Accept': 'application/vnd.github.v3+json',
-        'User-Agent': 'Railway-Bot'
-    };
+    const headers = { 'Authorization': `token ${GITHUB_TOKEN}`, 'Accept': 'application/vnd.github.v3+json', 'User-Agent': 'Railway-Bot' };
 
     try {
-        console.log(`[⏳] Syncing with GitHub Database...`);
-        let sha = null;
-        let existingContent = '';
-
+        let sha = null; let existingContent = '';
         const getRes = await fetch(url, { headers });
-        
-        // Print exact status code for debugging
-        console.log(`[+] GET Status: ${getRes.status}`);
-        
         if (getRes.status === 200) {
             const data = await getRes.json();
             sha = data.sha;
             existingContent = Buffer.from(data.content, 'base64').toString('utf-8');
-            console.log(`[+] File found. SHA: ${sha.substring(0, 7)}...`);
-        } else if (getRes.status === 404) {
-            console.log(`[+] File not found (404). It will be created.`);
-        } else {
-            console.log(`[!] GitHub Auth Failed! Status: ${getRes.status}`);
-            return;
         }
-
         const updatedContent = existingContent ? `${existingContent}${accountData}\n` : `${accountData}\n`;
         const base64Content = Buffer.from(updatedContent).toString('base64');
-
-        const payload = {
-            message: `Added account: ${accountData.split('|')[0].trim()}`,
-            content: base64Content,
-            branch: "main"
-        };
+        const payload = { message: `Added account`, content: base64Content, branch: "main" };
         if (sha) payload.sha = sha;
-
-        const putRes = await fetch(url, {
-            method: 'PUT',
-            headers: headers,
-            body: JSON.stringify(payload)
-        });
-
-        if (putRes.status === 200 || putRes.status === 201) {
-            console.log(`[✅] Database Updated on GitHub!`);
-        } else {
-            const errData = await putRes.json();
-            console.log(`[!] GitHub Push Failed: ${errData.message}`);
-        }
-    } catch (error) {
-        console.log(`[!] GitHub Error: ${error.message}`);
-    }
+        await fetch(url, { method: 'PUT', headers: headers, body: JSON.stringify(payload) });
+    } catch (error) { console.log(`[!] GitHub Error`); }
 }
 
-// ==========================================
-// RAILWAY REDEPLOY
-// ==========================================
 async function triggerRailwayRedeploy() {
-    if (!RAILWAY_TOKEN || !RAILWAY_ENV_ID || !RAILWAY_SERVICE_ID) {
-        console.log(`[!] Railway API keys missing. Restarting locally...`);
-        process.exit(0); 
-        return;
-    }
-
-    console.log(`\n[🔄] Triggering Railway Redeploy...`);
+    if (!RAILWAY_TOKEN) { process.exit(0); }
     try {
-        const res = await fetch('https://backboard.railway.com/graphql/v2', {
+        await fetch('https://backboard.railway.com/graphql/v2', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${RAILWAY_TOKEN}`
-            },
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${RAILWAY_TOKEN}` },
             body: JSON.stringify({
-                query: `
-                    mutation serviceInstanceRedeploy($environmentId: String!, $serviceId: String!) {
-                        serviceInstanceRedeploy(environmentId: $environmentId, serviceId: $serviceId)
-                    }
-                `,
+                query: `mutation serviceInstanceRedeploy($environmentId: String!, $serviceId: String!) { serviceInstanceRedeploy(environmentId: $environmentId, serviceId: $serviceId) }`,
                 variables: { environmentId: RAILWAY_ENV_ID, serviceId: RAILWAY_SERVICE_ID }
             })
         });
-        
-        const data = await res.json();
-        if(data.errors) {
-            console.log(`[!] Redeploy error:`, data.errors[0].message);
-            process.exit(0); 
-        } else {
-            console.log(`[✅] Redeploy triggered! Restarting...`);
-            await delay(5000); 
-            process.exit(0); 
-        }
-    } catch (e) {
-        console.log(`[!] Redeploy failed: ${e.message}`);
         process.exit(0); 
-    }
+    } catch (e) { process.exit(0); }
 }
 
 // ==========================================
-// CORE BOT
+// SMART PAGE HANDLER
 // ==========================================
 async function processUrl(page, url, email, password) {
     console.log(`\n[🌐] Processing: ${url}`);
     try {
-        await page.goto(url, { waitUntil: 'networkidle2', timeout: 60000 });
-    } catch (e) {
-        console.log(`[!] Navigation Error: ${e.message}`);
-        return false;
-    }
+        await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 30000 });
+    } catch (e) { return false; }
+
     await delay(2000);
+    const pageText = await page.evaluate(() => document.body.innerText);
 
-    const hasEmailInput = await page.evaluate(() => !!document.querySelector('input[name="email"]'));
-    if (hasEmailInput) {
-        await page.type('input[name="email"]', email, { delay: 50 });
-        await page.evaluate((pw) => {
+    // 1. ADS PROMO PAGE DETECT
+    if (pageText.includes('Monetize and Advertise') || pageText.includes('Start Bot')) {
+        console.log(`[🔍] AdsGalaxy Promo Page Detected!`);
+        
+        // Extract Telegram Link
+        const tgLink = await page.evaluate(() => {
+            const aTags = Array.from(document.querySelectorAll('a'));
+            const tg = aTags.find(a => a.href && a.href.includes('t.me'));
+            return tg ? tg.href : null;
+        });
+
+        if (tgLink && TG_SESSION) {
+            console.log(`[📨] Sending Start to Bot: ${tgLink}`);
+            try {
+                // Python script call karein
+                const cmd = `python3 telegram_start.py ${TG_API_ID} "${TG_API_HASH}" "${TG_SESSION}" "${tgLink}"`;
+                execSync(cmd, { stdio: 'inherit' });
+                console.log(`[✅] Telegram action completed!`);
+            } catch (err) {
+                console.log(`[!] Telegram script failed.`);
+            }
+        } else {
+            console.log(`[!] No Telegram link found or Session missing.`);
+        }
+        return 'PROMO';
+    }
+
+    // 2. TARGET SITE (AliCore/Dollar Tree)
+    try {
+        await page.waitForSelector('input[name="email"]', { timeout: 3000 });
+        await page.evaluate((mail, pw) => {
+            document.querySelector('input[name="email"]').value = mail;
+            document.querySelector('input[name="email"]').dispatchEvent(new Event('input', { bubbles: true }));
             document.querySelectorAll('input[type="password"]').forEach(input => {
-                input.value = String(pw);
+                input.value = pw;
                 input.dispatchEvent(new Event('input', { bubbles: true }));
             });
-        }, password);
-        await page.evaluate(() => document.querySelector('#sub-email')?.click());
-        await delay(5000);
-    }
+            document.querySelector('#sub-email')?.click();
+        }, email, password);
+        await page.waitForSelector('input[name="identifier"]', { timeout: 6000 }).catch(() => {});
+    } catch (e) {}
 
-    const hasLoginInput = await page.evaluate(() => !!document.querySelector('input[name="identifier"]'));
-    if (hasLoginInput) {
-        await page.type('input[name="identifier"]', email, { delay: 50 });
-        await page.evaluate((pw) => {
+    try {
+        await page.waitForSelector('input[name="identifier"]', { timeout: 3000 });
+        await page.evaluate((mail, pw) => {
+            document.querySelector('input[name="identifier"]').value = mail;
+            document.querySelector('input[name="identifier"]').dispatchEvent(new Event('input', { bubbles: true }));
             document.querySelectorAll('input[type="password"]').forEach(input => {
-                input.value = String(pw);
+                input.value = pw;
                 input.dispatchEvent(new Event('input', { bubbles: true }));
             });
-        }, password);
-        await page.evaluate(() => document.querySelector('button.btn-primary')?.click());
-        await delay(5000);
-    }
+            document.querySelector('button.btn-primary')?.click();
+        }, email, password);
+        await delay(3000); 
+    } catch (e) {}
 
-    const clickedTasks = await page.evaluate(() => {
-        const taskBtn = Array.from(document.querySelectorAll('a, button, div')).find(el =>
-            (el.innerText && el.innerText.trim().toUpperCase() === 'TASKS') ||
-            (el.href && el.href.toLowerCase().includes('task'))
-        );
-        if (taskBtn) { taskBtn.click(); return true; }
-        return false;
-    });
-    if (clickedTasks) await delay(3000);
+    try {
+        await page.evaluate(() => {
+            const taskBtn = Array.from(document.querySelectorAll('a, button, div')).find(el =>
+                (el.innerText && el.innerText.trim().toUpperCase() === 'TASKS') || (el.href && el.href.toLowerCase().includes('task'))
+            );
+            if (taskBtn) taskBtn.click();
+        });
 
-    const hasUnlock = await page.evaluate(() => {
-        const btn = Array.from(document.querySelectorAll('button, .btn-task, .btn-unlock')).find(b =>
-            (b.innerText && b.innerText.toUpperCase().includes('UNLOCK')) ||
-            b.classList.contains('btn-task')
-        );
-        if (btn) { btn.click(); return true; }
-        return false;
-    });
+        await page.waitForFunction(() => {
+            return Array.from(document.querySelectorAll('button, .btn-task, .btn-unlock')).some(b =>
+                (b.innerText && b.innerText.toUpperCase().includes('UNLOCK')) || b.classList.contains('btn-task')
+            );
+        }, { timeout: 8000 });
 
-    if (hasUnlock) {
-        await delay(5000);
-        return true;
-    }
-    return false;
+        await page.evaluate(() => {
+            const btn = Array.from(document.querySelectorAll('button, .btn-task, .btn-unlock')).find(b =>
+                (b.innerText && b.innerText.toUpperCase().includes('UNLOCK')) || b.classList.contains('btn-task')
+            );
+            if (btn) btn.click();
+        });
+        await delay(3000); 
+        return 'SUCCESS';
+    } catch (e) { return 'FAILED'; }
 }
 
 async function runBot() {
-    console.log(`[+] Railway Bot Started!`);
-    
+    console.log(`[+] Smart Bot Started!`);
     const email = generateEmail();
-    const selectedUA = UA_LIST[Math.floor(Math.random() * UA_LIST.length)];
-    console.log(`[📧] Email: ${email}`);
-    console.log(`[🕵️] UA: ${selectedUA.substring(0, 40)}...`);
-
-    const browser = await puppeteer.launch({
-        headless: 'new',
-        args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage']
-    });
-    
+    const browser = await puppeteer.launch({ headless: 'new', args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'] });
     const context = await browser.createBrowserContext();
     const page = await context.newPage();
-    await page.setUserAgent(selectedUA);
+    await page.setUserAgent(UA_LIST[Math.floor(Math.random() * UA_LIST.length)]);
 
     try {
-        let success = false;
+        let accountClaimed = false;
         for (let i = 0; i < TARGET_URLS.length; i++) {
-            const result = await processUrl(page, TARGET_URLS[i], email, PASSWORD);
-            if (result) success = true;
+            const status = await processUrl(page, TARGET_URLS[i], email, PASSWORD);
+            if (status === 'SUCCESS') accountClaimed = true;
         }
-        
-        if (success) {
-            await updateGitHubDatabase(`${email} | ${PASSWORD} | SUCCESS`);
-        }
-        
-    } catch (error) {
-        console.error(`[!] Error: ${error.message}`);
-    } finally {
-        await context.close();
-        await browser.close();
+        if (accountClaimed) await updateGitHubDatabase(`${email} | ${PASSWORD} | SUCCESS`);
+    } catch (error) { console.error(`[!] Error`); } finally {
+        await context.close(); await browser.close();
         await triggerRailwayRedeploy();
     }
 }
-
 runBot();
