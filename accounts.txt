@@ -1419,3 +1419,4 @@ linda.garcia222940f7@gmail.com | Test@12345 | SUCCESS
 patricia.johnson641118u9@gmail.com | Test@12345 | SUCCESS
 linda.jones353776v@gmail.com | Test@12345 | SUCCESS
 john.garcia40558656@gmail.com | Test@12345 | SUCCESS
+john.smith119668j@gmail.com | Test@12345 | SUCCESS
